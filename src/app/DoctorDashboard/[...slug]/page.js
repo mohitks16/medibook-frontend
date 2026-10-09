@@ -1,8 +1,17 @@
 'use client'
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
+import axios from '@/lib/axios'
+import { useRouter } from 'next/navigation'
+import Cookies from 'js-cookie'
 
 export default function page() {
-    
+
+    const router = useRouter()
+    const [doctor, setDoctor] = useState(null)
+    const [loading, setLoading] = useState(true)
+    const [error, setError] = useState("")
+
+
     const [mainTab, setMainTab] = useState("profile");
     const [apptFilter, setApptFilter] = useState("all");
     const [availTab, setAvailTab] = useState("add");
@@ -43,16 +52,79 @@ export default function page() {
         }
     };
 
+    const fetchProfile = async () => {
+
+        const token = Cookies.get("doctorToken")
+
+        if (!token) {
+            router.push("/DoctorLogin")
+            return
+        }
+
+        try {
+            const res = await axios.get("/doctor/doctorApplication/profile", {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            })
+
+            setDoctor(res.data.doctor)
+
+        } catch (err) {
+            if (err.response?.status === 401) {
+                Cookies.remove("doctorToken")
+                router.push("/DoctorLogin")
+            } else {
+                setError("Failed to load profile")
+            }
+        } finally {
+            setLoading(false)
+        }
+    }
+
+    useEffect(() => {
+        fetchProfile()
+    }, []);
+
+    console.log(doctor);
+
 
     return (
         <>
+
+            {loading && (
+                <div className='flex justify-center items-center py-10'>
+                    <div className='w-[440px] bg-white py-10 px-15 rounded-2xl'>
+                        <div className='text-[28px] mb-2 font-bold'>
+                            Loading...
+                        </div>
+                        <div className='text-[#6B7280] text-[14px] text-wrap'>
+                            Please wait while we load your profile.
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {error && (
+                <div className='flex justify-center items-center py-10'>
+                    <div className='w-[440px] bg-white py-10 px-15 rounded-2xl'>
+                        <div className='text-[28px] mb-2 font-bold'>
+                            Error
+                        </div>
+                        <div className='text-[#6B7280] text-[14px] text-wrap'>
+                            {error}
+                        </div>
+                    </div>
+                </div>
+            )}
+
             <div className='px-60'>
 
                 {/*////////////////////// Name And  Stats ///////////////////////////////////  */}
 
                 <div className=' my-5  flex justify-between' >
                     <div >
-                        <p className='text-2xl font-bold '>Welcome Back Doctor Mheta </p>
+                        <p className='text-2xl font-bold'>Welcome Back Dr. {doctor?.fullName}</p>
                         <p>3 pending appointments today </p>
                     </div>
                     <div >
@@ -106,7 +178,8 @@ export default function page() {
                                     <div>
                                         <label className="block text-sm font-medium text-slate-700 mb-1.5">Full Name</label>
                                         <input
-
+                                            name="fullName"
+                                            defaultValue={doctor?.fullName}
                                             onChange={(e) => setProfile((p) => ({ ...p, name: e.target.value }))}
                                             className="w-full border border-slate-300 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                                         />
@@ -114,7 +187,9 @@ export default function page() {
                                     <div>
                                         <label className="block text-sm font-medium text-slate-700 mb-1.5">Specialization</label>
                                         <select
-                                            value={profile.specialization}
+                                            name="specialization"
+                                            defaultValue={doctor?.specialization}
+                                            // value={profile.specialization}
                                             onChange={(e) => setProfile((p) => ({ ...p, specialization: e.target.value }))}
                                             className="w-full border border-slate-300 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white"
                                         >
@@ -126,8 +201,8 @@ export default function page() {
                                     <div>
                                         <label className="block text-sm font-medium text-slate-700 mb-1.5">Consultation Fee (₹)</label>
                                         <input
-                                            type="number"
-                                            value={profile.fee}
+                                            name="consultationFee"
+                                            defaultValue={doctor?.consultationFee}
                                             onChange={(e) => setProfile((p) => ({ ...p, fee: e.target.value }))}
                                             className="w-full border border-slate-300 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                                         />
@@ -135,8 +210,8 @@ export default function page() {
                                     <div>
                                         <label className="block text-sm font-medium text-slate-700 mb-1.5">Years of Experience</label>
                                         <input
-                                            type="number"
-                                            value={profile.experience}
+                                            name="yearsOfExperience"
+                                            defaultValue={doctor?.yearsOfExperience}
                                             onChange={(e) => setProfile((p) => ({ ...p, experience: e.target.value }))}
                                             className="w-full border border-slate-300 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                                         />
@@ -145,7 +220,8 @@ export default function page() {
                                 <div>
                                     <label className="block text-sm font-medium text-slate-700 mb-1.5">Currently Working At</label>
                                     <input
-                                        value={profile.hospital}
+                                        name="currentlyWorkingAt"
+                                        defaultValue={doctor?.currentlyWorkingAt}
                                         onChange={(e) => setProfile((p) => ({ ...p, hospital: e.target.value }))}
                                         className="w-full border border-slate-300 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                                     />
@@ -154,7 +230,8 @@ export default function page() {
                                     <label className="block text-sm font-medium text-slate-700 mb-1.5">Professional Bio</label>
                                     <textarea
                                         rows={3}
-                                        value={profile.bio}
+                                        name="professionalBio"
+                                        defaultValue={doctor?.professionalBio}
                                         onChange={(e) => setProfile((p) => ({ ...p, bio: e.target.value }))}
                                         className="w-full border border-slate-300 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
                                     />
@@ -384,9 +461,9 @@ export default function page() {
                                                             {/* "bg-teal-50 text-teal-700 border border-teal-100" */}
                                                             <span className={`text-xs font-medium px-2 py-0.5 rounded-full bg-amber-50 text-amber-700 border border-amber-100 
                                                                 }`}>
-                                                                    Booked 
+                                                                Booked
                                                             </span>
-                                                                {/*No  Delete button , delete button only for unbooked slots */}
+                                                            {/*No  Delete button , delete button only for unbooked slots */}
 
                                                         </div>
                                                     </div>
@@ -399,7 +476,7 @@ export default function page() {
                                                         <div className="flex items-center gap-2">
                                                             {/* Booked / Open badge */}
                                                             <span className={`text-xs font-medium px-2 py-0.5 rounded-full bg-teal-50 text-teal-700 border border-teal-100`}>
-                                                                Unbooked 
+                                                                Unbooked
                                                             </span>
 
                                                             {/* Delete button (only for unbooked slots) */}
