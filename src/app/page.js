@@ -1,10 +1,13 @@
 import Image from "next/image";
 
 export default function Home() {
+
+  // console.log(process.env.PRIVATE_BACKEND_API_URL) ; 
   return (
 
     <>
       {/*-------------------------- Hero Section --------------------------------------- */}
+      
       <div className="px-[150px] items-center gap-[100px] bg-[#F3F4F6] flex py-[96px] ">
         <div className="w-3/5" >
           <div className="bg-[#b8c6e5] text-[10px] mb-[24px] inline-block rounded-[7px] font-semibold py-[2px] px-[5px] text-[#2563EB]">
