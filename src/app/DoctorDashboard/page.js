@@ -1,5 +1,5 @@
 import { redirect } from 'next/navigation'
-import { getDoctorProfile } from '@/services/doctorService'
+import { getDoctorProfile, getMySlots } from '@/services/doctorService'
 import ProfileSection from './components/ProfileSection'
 import AppointmentsSection from './components/AppointmentsSection'
 
@@ -20,6 +20,11 @@ export default async function DoctorDashboardPage() {
             </div>
         )
     }
+
+     // Fetch slots
+    const { slots, error: slotsError } = await getMySlots() 
+    console.log("Slots from service:", slots)
+    console.log("Slots error:", slotsError) 
 
     return (
         <div className='px-60'>
@@ -47,7 +52,7 @@ export default async function DoctorDashboardPage() {
             </div>
 
             {/* Profile section with tabs */}
-            <ProfileSection doctor={doctor} />
+            <ProfileSection doctor={doctor} slots={slots || []} />
             
         </div>
     )

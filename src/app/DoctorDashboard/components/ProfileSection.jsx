@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import AppointmentsSection from './AppointmentsSection'
 
-export default function ProfileSection({ doctor }) {
+export default function ProfileSection({ doctor  , slots}) {
 
     const [mainTab, setMainTab] = useState("profile")
 
@@ -125,7 +125,7 @@ export default function ProfileSection({ doctor }) {
             )}
 
             {mainTab === "appointments" && (
-                <AppointmentsSection />
+                <AppointmentsSection slots={slots} />
             )}
         </>
     )
