@@ -34,8 +34,42 @@ async function getToken() {
     const cookieStore = await cookies()
     return cookieStore.get("doctorToken")?.value
     //  console.log("getToken called, token:", token ? "EXISTS" : "NULL")
-}
+} ; 
 
+export async function updateDoctorProfileService(formData) {
+  try {
+    const token = await getToken();
+
+    const {
+      fullName,
+      specialization,
+      consultationFee,
+      currentlyWorkingAt,
+      professionalBio,
+    } = formData;
+
+    const response = await axios.patch(
+      "/doctor/doctorApplication/update-profile",
+      {
+        fullName,
+        specialization,
+        consultationFee,
+        currentlyWorkingAt,
+        professionalBio,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    return response.data; // Return server response (e.g. { message, data })
+  } catch (error) {
+    console.error("Error updating profile:", error.response?.data || error.message);
+    throw error; // Let UI component handle toast/notification
+  }
+} ; 
 
 
 export async function addSlot(date, time) {
