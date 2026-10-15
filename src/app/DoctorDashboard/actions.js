@@ -1,6 +1,6 @@
 "use server"
 
-import { addSlot, deleteSlot } from "@/services/doctorService"
+import { addSlot, deleteSlot, updateDoctorProfileService } from "@/services/doctorService"
 import { revalidatePath } from "next/cache"
 
 export async function createSlot(formData) {
@@ -23,6 +23,18 @@ export async function createSlot(formData) {
 
 }
 
+export async function updateProfile(formData) {
+  const result = await updateDoctorProfileService(formData);
+
+  if (result.error) {
+    return { error: result.error };
+  }
+
+  // Refreshes the server-side data in page.js automatically
+  revalidatePath("/DoctorDashboard");
+  return { success: true, data: result.data };
+}
+
 export async function removeSlot(slotId) {
     
     if (!slotId) {
@@ -39,3 +51,4 @@ export async function removeSlot(slotId) {
     return { success: true }
 
 }
+

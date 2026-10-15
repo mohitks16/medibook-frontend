@@ -2,16 +2,53 @@
 
 import { useState } from 'react'
 import AppointmentsSection from './AppointmentsSection'
+// import { updateDoctorProfile } from '@/services/doctorService';
+import { updateProfile } from '../actions';
 
-export default function ProfileSection({ doctor  , slots}) {
+export default function ProfileSection({ doctor , slots}) {
 
+    // const [doctor, setdoctor] = useState(initialDoctor);
+    // const [formKey, setFormKey] = useState(0);
     const [mainTab, setMainTab] = useState("profile")
-
+    const [message, setMessage] = useState({ text: "", type: "" });
+    const [loading, setLoading] = useState(false);
     const specializations = [
         "Cardiologist", "Neurologist", "Dermatologist", "Orthopedist",
         "Pediatrician", "Gynecologist", "Ophthalmologist", "ENT Specialist",
         "Psychiatrist", "General Physician", "Dentist", "Radiologist",
     ]
+
+    const handleProfileUpdate = async (e) => {
+
+    e.preventDefault();
+    const payload = {
+      fullName: e.target.fullName.value,
+      specialization: e.target.specialization.value,
+      consultationFee: Number(e.target.consultationFee.value),
+      yearsOfExperience: Number(e.target.yearsOfExperience.value),
+      currentlyWorkingAt: e.target.currentlyWorkingAt.value,
+      professionalBio: e.target.professionalBio.value,
+
+    };
+
+    setLoading(true);
+    setMessage({ text: "", type: "" });
+
+    try {
+      const result = await updateProfile(payload);
+
+      if (result.error) {
+        setMessage({ text: result.error, type: "error" });
+      } else {
+        setMessage({ text: "Profile updated successfully!", type: "success" });
+      }
+    } catch (err) {
+      setMessage({ text: "Something went wrong", type: "error" });
+    } finally {
+      setLoading(false);
+    }
+  };
+ 
 
     const degrees = ["MBBS", "BDS", "BSc Nursing", "MD", "MS", "MSc", "DNB", "DM", "MCh", "MDS", "BAMS", "BHMS"]
 
@@ -35,7 +72,7 @@ export default function ProfileSection({ doctor  , slots}) {
 
             {mainTab === "profile" && (
                 <div className='flex gap-6'>
-                    <div className='w-2/3'>
+                    <form onSubmit={handleProfileUpdate} className='w-2/3'>
                         <div className="bg-white border border-slate-200 rounded-2xl p-6 space-y-5">
                             <h2 className="font-semibold text-slate-900">Profile Information</h2>
                             
@@ -102,11 +139,12 @@ export default function ProfileSection({ doctor  , slots}) {
                         </div>
 
                         <button
+                            type="submit"
                             className="w-full my-3 bg-blue-600 text-white py-3 rounded-xl font-semibold hover:bg-blue-700 transition-colors"
                         >
                             Save Profile
                         </button>
-                    </div>
+                    </form>
 
                     {/* Right side preview card */}
                     <div className='w-1/3'>
