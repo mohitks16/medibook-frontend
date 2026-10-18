@@ -14,6 +14,7 @@ export default function Footer() {
             </div>
             <div className="text-lg font-bold text-white">MedConnect</div>
           </div>
+          
           <p className="text-sm text-gray-500">
             Connecting patients with trusted healthcare professionals instantly.
             Simple scheduling, verified credentials.
