@@ -19,7 +19,9 @@ export default function AppointmentsSection({ slots }) {
         "04:00 PM", "04:30 PM", "05:00 PM", "05:30 PM", "06:00 PM",
     ]
 
+
     async function handleAddSlot(formData) {
+
         setLoading(true)
         setError("")
         setSuccess("")
@@ -122,7 +124,6 @@ export default function AppointmentsSection({ slots }) {
                     {/* Add Slot Form */}
                     <form action={handleAddSlot} className="bg-white border border-slate-200 rounded-2xl p-5 space-y-4">
                         <h3 className="font-semibold text-slate-900">Add New Slot</h3>
-                        
                         <div>
                             <label className="block text-sm font-medium text-slate-700 mb-1.5">Select Date</label>
                             <input

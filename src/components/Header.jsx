@@ -22,15 +22,19 @@ export default function Header() {
                 </Link>
 
                 <Link href='/RegisterAsDoctor'>
-                    <div className='font-semibold text-[14px]' >Register as Doctor </div>
+                    <div className=' hover:bg-blue-300 rounded-[10px] font-semibold text-[14px] text-white bg-[#2563EB] px-4 py-3' >Register as Doctor </div>
                 </Link>
 
                 <Link href='/DoctorLogin'>
-                    <div className='font-semibold text-[14px]' >Doctor Login </div>
+                    <div className=' hover:bg-blue-300 rounded-[10px] font-semibold text-[14px] text-white bg-[#2563EB] px-4 py-3' >Doctor Login </div>
                 </Link>
 
                 <Link href='/PatientLogin'>
-                <div className=' hover:bg-blue-300 rounded-[10px] font-semibold text-[14px] text-white bg-[#2563EB] px-4 py-3' >Patient Login / Signup</div>
+                <div className=' hover:bg-blue-300 rounded-[10px] font-semibold text-[14px] text-white bg-[#2563EB] px-4 py-3' >Patient Login </div>
+                </Link>
+
+                <Link href='/PatientSignup'>
+                <div className=' hover:bg-blue-300 rounded-[10px] font-semibold text-[14px] text-white bg-[#2563EB] px-4 py-3' >Patient Signup</div>
                 </Link>
 
             </div>

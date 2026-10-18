@@ -27,7 +27,7 @@ export async function loginDoctor(formData) {
             maxAge: 60 * 60 * 24 // 1 day
         })
 
-        console.log(res.data.doctor.id) ;
+        // console.log(res.data.doctor.id) ;
         // redirectPath = `/DoctorDashboard/${res.data.doctor.id}`
         // redirect(`/DoctorDashboard${res.data.doctor.id}`) 
 
