@@ -19,7 +19,8 @@ describe('Header', () => {
         expect(screen.getByText('Search Doctor')).toBeInTheDocument()
         expect(screen.getByText('Register as Doctor')).toBeInTheDocument()
         expect(screen.getByText('Doctor Login')).toBeInTheDocument()
-        expect(screen.getByText('Patient Login / Signup')).toBeInTheDocument()
+        expect(screen.getByText('Patient Login')).toBeInTheDocument()
+        expect(screen.getByText('Patient Signup')).toBeInTheDocument()
     })
 
     test('"Search Doctor" link points to correct route', () => {
@@ -40,10 +41,16 @@ describe('Header', () => {
         expect(link).toHaveAttribute('href', '/DoctorLogin')
     })
 
-    test('"Patient Login / Signup" link points to correct route', () => {
+    test('"Patient Login" link points to correct route', () => {
         render(<Header />)
-        const link = screen.getByText('Patient Login / Signup').closest('a')
+        const link = screen.getByText('Patient Login').closest('a')
         expect(link).toHaveAttribute('href', '/PatientLogin')
+    })
+
+    test('"Patient Signup" link points to correct route', () => {
+        render(<Header />)
+        const link = screen.getByText('Patient Signup').closest('a')
+        expect(link).toHaveAttribute('href', '/PatientSignup')
     })
 
 })

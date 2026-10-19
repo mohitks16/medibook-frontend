@@ -90,14 +90,24 @@ npm run test:ui
 * **Write Detailed Comments:** Every function, logical branch, and variable block must have clear, plain-English comments explaining *what* it does and *why*.
 * **Readable Names:** Use clear, descriptive names for variables and functions (e.g., use `totalPrice` instead of `tp`).
 
-## 🧪 Unit Testing Instructions
-When I ask you to write unit tests, strictly follow these beginner-friendly rules:
+## Important instruction for wrirting test cases
+
+1. Write a basic, straightforward React Testing Library test suite for it using Jest and @testing-library/react. 
 
 Focus strictly on these basic elements:
-
 1. Basic UI Validation: Ensure the component renders correctly.
 2. Common RTL Queries: Use standard queries like screen.getByRole, screen.getByLabelText, or screen.getByText.
 3. User Event Actions: Write basic tests using userEvent to simulate clicks or typing inputs.
 4. Props & Component Communication: Test that functions passed down as props (like onClick handlers) are called correctly when triggered.
 
 Keep the code simple, well-commented, and readable for a junior developer. Do not use advanced production frameworks or complex configurations.
+
+2. For API-Connected Components (Using MSW)
+
+Focus strictly on these elements:
+1. Basic MSW Setup: Write a clean, simple inline MSW rest/http handler to mock the exact API endpoint this component calls (e.g., returning a mock JSON array).
+2. Loading State Validation: Verify that a basic "Loading..." indicator or skeleton UI appears initially.
+3. Render Mocked Data: Use async screen.findBy queries to verify the mocked data successfully displays on the screen after the fetch completes.
+4. Simple Error Handling (Optional): Add one simple test showing what happens if the mock server returns a 500 error.
+
+Keep it simple, avoid complex setup logic, and explain the MSW integration in the comments.

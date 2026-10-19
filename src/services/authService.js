@@ -7,10 +7,10 @@ import { cookies } from "next/headers"
 
 export async function patienRequestOtp(email) { 
     try { 
-        console.log("Email is , in the service layer " , email)
+        // console.log("Email is , in the service layer " , email)
         const res = await axios.post("/patient/patientApplication/login/request-otp", { email }); 
 
-        console.log("response is " , res.data)
+        // console.log("response is " , res.data)
 
         return { success: true, message: res.data.message }; 
     } catch (error) { 
@@ -52,13 +52,13 @@ export async function patientSignupRequestOtp(fullName , email , phoneNumber) {
 
         console.log("<--SERVICE -->") ;
 
-        console.log("Full Name is , in the service layer " , fullName)
-        console.log("Phone Number is , in the service layer " , phoneNumber)
-        console.log("Email is , in the service layer " , email)
+        // console.log("Full Name is , in the service layer " , fullName)
+        // console.log("Phone Number is , in the service layer " , phoneNumber)
+        // console.log("Email is , in the service layer " , email)
 
         const res = await axios.post("/patient/patientApplication/signup/request-otp", { fullName , email , phoneNumber }) ;
         
-        console.log("response is " , res.data)
+        // console.log("response is " , res.data)
         
         
         return { success: true, message: res.data.message }; 
@@ -85,7 +85,7 @@ export async function patientSignupVerifyOtp(email , otp ){
             maxAge: 60 * 60 * 24 // 1 day
         }) ;
 
-        console.log("response is " , res.data)
+        // console.log("response is " , res.data)
 
         return { success: true, message: res.data.message }; 
         
