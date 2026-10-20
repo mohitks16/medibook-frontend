@@ -79,35 +79,41 @@ npm run test:ui
 - **Testing:** Write component and unit tests using Vitest and Testing Library (e.g., `*.test.jsx`). Ensure tests are maintained alongside code changes.
 - **Styling:** Use Tailwind CSS v4 utility classes and custom styles in `globals.css`.
 
-## 🚨 CRITICAL RULE: File Modification Scope
-* **Only modify the exact file(s) I explicitly mention.** 
-* Do **NOT** touch, edit, or refactor any other files in the project workspace unless I give you direct permission.
-* If you need information from another file, ask me for it instead of assuming or changing it.
+# Frontend Development Guidelines & System Instructions
 
-## 💻 Coding Style Guidelines (Beginner-Friendly)
-* **Keep It Simple:** Use clean, standard, and easy-to-understand code structures (e.g., standard `if/else` statements, basic loops, and clear function declarations).
-* **No Advanced Features:** Do **NOT** use complex or rarely used features (avoid advanced arrow function chaining, complex ternary nests, obscure libraries, or high-level abstractions).
-* **Write Detailed Comments:** Every function, logical branch, and variable block must have clear, plain-English comments explaining *what* it does and *why*.
-* **Readable Names:** Use clear, descriptive names for variables and functions (e.g., use `totalPrice` instead of `tp`).
+## 🚨 Critical Scope & Workspace Boundaries
+- **Strict File Isolation:** Modify **only** the component, page, or style file(s) explicitly targeted in the prompt. Never touch unmentioned components, layout wrappers, or global config files.
+- **State & Props Boundary:** Do not refactor parent components, global stores, or shared hooks unless explicitly requested. If props or store values are missing, ask for context.
+- **No Unrequested Dependencies:** Do not install new UI kits, icon packs, animation libraries, or state management packages. Use the styling system (CSS, Tailwind, CSS Modules) and libraries already present in the project.
 
-## Important instruction for wrirting test cases
+---
 
-1. Write a basic, straightforward React Testing Library test suite for it using Jest and @testing-library/react. 
+## 🛠️ Step-by-Step Execution Workflow
+Follow this exact order of operations for every task:
 
-Focus strictly on these basic elements:
-1. Basic UI Validation: Ensure the component renders correctly.
-2. Common RTL Queries: Use standard queries like screen.getByRole, screen.getByLabelText, or screen.getByText.
-3. User Event Actions: Write basic tests using userEvent to simulate clicks or typing inputs.
-4. Props & Component Communication: Test that functions passed down as props (like onClick handlers) are called correctly when triggered.
+1. **Analyze:** Inspect the target file and adjacent UI files to identify established patterns (e.g., function components vs. arrow functions, styling approach, state hooks vs. props, naming conventions).
+2. **Locate:** Identify the exact JSX/HTML block, state variable, or styling class requiring updates.
+3. **Execute:** Provide only the precise component changes or markup required. Avoid reprinting huge, untouched JSX trees unless a full component replacement is requested.
 
-Keep the code simple, well-commented, and readable for a junior developer. Do not use advanced production frameworks or complex configurations.
+---
 
-2. For API-Connected Components (Using MSW)
+## 💻 Frontend Code Style: Beginner-Friendly & Clear
 
-Focus strictly on these elements:
-1. Basic MSW Setup: Write a clean, simple inline MSW rest/http handler to mock the exact API endpoint this component calls (e.g., returning a mock JSON array).
-2. Loading State Validation: Verify that a basic "Loading..." indicator or skeleton UI appears initially.
-3. Render Mocked Data: Use async screen.findBy queries to verify the mocked data successfully displays on the screen after the fetch completes.
-4. Simple Error Handling (Optional): Add one simple test showing what happens if the mock server returns a 500 error.
+### 1. Readability & State Management
+- **Avoid Advanced Hooks:** Do **NOT** use premature optimization or advanced hooks such as `useCallback`, `useMemo`, `useActionState`, `useTransition`, or custom hook abstractions unless explicitly instructed or already required by adjacent code.
+- **Stick to Core Hooks:** Rely primarily on standard `useState` and basic `useEffect` where needed. Keep state updates clear, predictable, and local.
+- **Simple Conditional Rendering:** Prefer clean  ternary  early-exit guards or readable standard conditionals  
+- **Descriptive Naming:** 
+  - Handlers: Use action-oriented names (e.g., `handleFormSubmit`, `handleCloseModal` instead of generic `handleClick` or `submit`).
+  - Booleans: Use standard prefix flags (e.g., `isOpen`, `isLoading`, `hasError`).
+  - Components: Use PascalCase matching the file name.
 
-Keep it simple, avoid complex setup logic, and explain the MSW integration in the comments.
+### 2. Consistency & Styling
+- **Match Existing Style Conventions:** Strictly mirror the established styling pattern of adjacent files (e.g., Tailwind CSS, Vanilla CSS, BEM naming, or CSS Modules).
+- **Component Decomposition:** Do not over-abstract small elements into dozens of tiny sub-components prematurely. Keep the layout easy to read top-to-bottom.
+- **Asset Usage:** Reuse existing UI components (buttons, cards, modals) and icons already imported in the project before creating new ones.
+
+### 3. Clear Explanatory Comments
+- Add plain-English comments above non-obvious lifecycle triggers (`useEffect`), complex data transformations, and conditional branches.
+- Explain **what** the UI element represents and **why** a specific handler or side effect is triggered.
+
