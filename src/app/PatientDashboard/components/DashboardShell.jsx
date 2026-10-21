@@ -2,6 +2,7 @@
 
 import { useState } from "react"
 import ProfileSection from "./ProfileSection"
+import SearchSection from "./SearchSection"
 
 export default function DashboardShell({ patient }) {
 
@@ -43,9 +44,7 @@ export default function DashboardShell({ patient }) {
             </div>
 
             {tab === "search" && (
-                <div>
-                    {/* PASTE YOUR EXISTING SEARCH TAB JSX HERE (unchanged) */}
-                </div>
+                <SearchSection />
             )}
 
             {tab === "profile" && (

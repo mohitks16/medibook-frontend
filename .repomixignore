@@ -1,0 +1,31 @@
+# Ignore specific directories
+dist/
+coverage/
+.idea/
+
+# Ignore all CSS and log files
+**/*.css
+**/*.log
+
+# Ignore specific files
+vitest.config.js
+vitest.setup.js
+postcss.config.mjs
+eslint.config.mjs
+jsconfig.json
+next.config.mjs
+
+
+
+src/app/DoctorDashboard/actions.js
+src/app/PatientDashboard/components/DashboardShell.test.jsx
+src/app/PatientDashboard/components/ProfileSection.test.jsx
+src/app/PatientLogin/components/EnterOtp.test.jsx
+src/app/PatientLogin/components/LoginForm.test.jsx
+src/app/PatientSignUp/components/SignUpForm.test.jsx
+src/app/PatientSignUp/components/OtpVerification.test.jsx
+
+
+
+**/patientProfileService.test.js
+

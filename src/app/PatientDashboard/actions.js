@@ -4,7 +4,19 @@ import {
     updatePatientProfileService,
     uploadProfilePictureService,
 } from "@/services/patientProfileService"
+import { fetchDoctors } from "@/services/doctorDiscoveryService"
 import { revalidatePath } from "next/cache"
+
+
+export async function searchDoctors(filters) {
+    try {
+        const res = await fetchDoctors(filters)
+        if (!res.success) return { error: res.message }
+        return { success: true, doctors: res.doctors }
+    } catch (error) {
+        return { error: "Failed to fetch doctors" }
+    }
+}
 
 
 export async function updateProfile(formData) {
