@@ -42,6 +42,6 @@ next-env.d.ts
 
 Frontend Codebase .md
 .vitest/
-
+frontend-codebase.md
 repomix-output.xml
 

@@ -1,6 +1,6 @@
 'use client'
 // import { getDoctorProfile } from '@/services/doctorService';
-import { useParams } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 import React, { useEffect, useState } from 'react'
 import { fetchDoctorProfile } from '../actions';
 
@@ -8,34 +8,43 @@ export default  function page() {
 
   const [selectedSlot, setSelectedSlot] = useState(null);
 
-  const slots = ["10:00 AM", "12:00 PM", "2:00 PM", "4:00 PM", "6:00 PM", "8:00 PM", "10:00 PM"];
+  const slots = ["10:00 AM", "12:00 PM", "2:00 PM", "4:00 PM", "6:00 PM", "8:00 PM", "10:00 PM"];    
 
   const [AvailableSlots , setAvailableSlots] = useState([])
   const [doctor , setDoctor] = useState({})
 
   const param = useParams() ; 
+  const router = useRouter();
   console.log("id", param.slug[0])
 
-  // const  = param.slug[0] ; 
+  // const  = param.slug[0] ;
 
 
 
 const fetchDoctorData = async () => {
     const res = await fetchDoctorProfile(param.slug[0])
-    const {Doctor , Slots , Message } = res ; 
-    setAvailableSlots(Slots) ; 
+    const {Doctor , Slots , Message } = res ;
+    setAvailableSlots(Slots) ;
     setDoctor(Doctor) ;
     // console.log("Doctor" , Doctor)
     // console.log("Slots" , Slots)
     // console.log("Message" , Message)
 }
 
-console.log("AvailableSlots" , AvailableSlots)
-console.log("doctor" , doctor)
-console.log("degree" , doctor?.degree?.split(','))
+const handleBook = () => {
+  if (!selectedSlot) {
+    alert("Please select a time slot first.");
+    return;
+  }
+  router.push(`/AppointmentCheckout/${param.slug[0]}?slotId=${selectedSlot}`);
+};
+
+// console.log("AvailableSlots" , AvailableSlots)
+// console.log("doctor" , doctor)
+// console.log("degree" , doctor?.degree?.split(','))
 
 useEffect(()=>{
-fetchDoctorData() ; 
+fetchDoctorData() ;
 },[])
 
   return (
@@ -46,7 +55,7 @@ fetchDoctorData() ;
             //   onClick={() => { setBookingStep("browse"); setSelectedDoc(null); }}
             className="text-sm text-slate-600 hover:text-blue-600 font-medium mb-6 flex items-center gap-1"
           >
-            ← Back to search
+            â† Back to search
           </button>
           <div className="grid lg:grid-cols-3 gap-6">
             {/* Doctor details card */}
@@ -59,7 +68,6 @@ fetchDoctorData() ;
                   <div>
                     <h2 className="text-xl font-bold text-slate-900">
                       {doctor.fullName}
-                    
                     </h2>
                     <p className="text-blue-600 font-medium text-sm">
                       {doctor.specialization}
@@ -69,7 +77,7 @@ fetchDoctorData() ;
                     </p>
                     <div className="mt-1.5 flex items-center gap-2 flex-wrap">
                       {doctor?.degree?.split(',').map((d) => (
-                        <span className="text-xs bg-blue-50 text-blue-700 border border-blue-100 px-2 py-0.5 rounded-md font-medium">
+                        <span key={d} className="text-xs bg-blue-50 text-blue-700 border border-blue-100 px-2 py-0.5 rounded-md font-medium">
                           {d}
                         </span>
                       ))}
@@ -89,7 +97,7 @@ fetchDoctorData() ;
                   </div>
                   <div className="text-center p-3 bg-slate-50 rounded-xl">
                     <p className="text-lg font-bold text-amber-500">
-                      {/* {selectedDoc.rating}★ */}
+                      {/* {selectedDoc.rating}â˜… */}
                     </p>
                     <p className="text-xs text-slate-500">
                       {/* {selectedDoc.reviews} reviews */}
@@ -97,7 +105,7 @@ fetchDoctorData() ;
                   </div>
                   <div className="text-center p-3 bg-slate-50 rounded-xl">
                     <p className="text-lg font-bold text-teal-600">
-                      {doctor.consultationFee} ₹
+                      {doctor.consultationFee} â‚¹
                     </p>
                     <p className="text-xs text-slate-500">Consultation</p>
                   </div>
@@ -113,7 +121,7 @@ fetchDoctorData() ;
                   <button
                     key={s._id}
                     onClick={() => setSelectedSlot(s._id)}
-                    className={`w-full text-left px-4 py-3 rounded-xl text-sm border transition-all 
+                    className={`w-full text-left px-4 py-3 rounded-xl text-sm border transition-all  
                         ${selectedSlot === s._id
                         ? "border-blue-600 bg-blue-50 text-blue-700 font-medium"
                         : "border-slate-200 text-slate-700 hover:border-blue-200"
@@ -124,10 +132,7 @@ fetchDoctorData() ;
                 ))}
               </div>
               <button
-                //   onClick={() => {
-                // if (selectedSlot) setBookingStep("book");
-                // else onNotify("Please select a time slot first.");
-                //   }}
+                onClick={handleBook}
                 className="w-full bg-blue-600 text-white py-3 rounded-xl text-sm font-semibold hover:bg-blue-700 transition-colors"
               >
                 Book Appointment
