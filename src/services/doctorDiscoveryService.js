@@ -77,12 +77,9 @@ export async function getDoctorDetail(doctorId) {
             },
         })
 
-        console.log("Response is ", res.data)
+        // console.log("Response is ", res.data)
 
         return {
-            // success: true,
-            // doctor: res.data.doctor || res.data,
-            // slots: res.data.slots,
             doctor:res.data.doctor,
             slots:res.data.slots,
             message:res.data.message

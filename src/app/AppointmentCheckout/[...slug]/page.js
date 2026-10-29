@@ -7,8 +7,8 @@ export default async function Page({ params, searchParams }) {
   const { slug } = await params;
   const { slotId } = await searchParams;
 
-  console.log("slug" , slug)
-  console.log("slotId" , slotId)
+  // console.log("slug" , slug)
+  // console.log("slotId" , slotId)
 
   if (!slotId) {
     return <div className="px-60 py-20 text-center text-red-500">Slot ID is missing.</div>;

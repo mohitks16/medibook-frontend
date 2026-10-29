@@ -8,40 +8,34 @@ export default  function page() {
 
   const [selectedSlot, setSelectedSlot] = useState(null);
 
-  const slots = ["10:00 AM", "12:00 PM", "2:00 PM", "4:00 PM", "6:00 PM", "8:00 PM", "10:00 PM"];    
-
   const [AvailableSlots , setAvailableSlots] = useState([])
   const [doctor , setDoctor] = useState({})
 
   const param = useParams() ; 
   const router = useRouter();
-  console.log("id", param.slug[0])
-
-  // const  = param.slug[0] ;
+  // console.log("id", param.slug[0])
 
 
 
 const fetchDoctorData = async () => {
+
     const res = await fetchDoctorProfile(param.slug[0])
     const {Doctor , Slots , Message } = res ;
     setAvailableSlots(Slots) ;
     setDoctor(Doctor) ;
-    // console.log("Doctor" , Doctor)
-    // console.log("Slots" , Slots)
-    // console.log("Message" , Message)
+
 }
 
 const handleBook = () => {
+
   if (!selectedSlot) {
     alert("Please select a time slot first.");
     return;
   }
   router.push(`/AppointmentCheckout/${param.slug[0]}?slotId=${selectedSlot}`);
+
 };
 
-// console.log("AvailableSlots" , AvailableSlots)
-// console.log("doctor" , doctor)
-// console.log("degree" , doctor?.degree?.split(','))
 
 useEffect(()=>{
 fetchDoctorData() ;

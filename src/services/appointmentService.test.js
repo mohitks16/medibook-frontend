@@ -50,7 +50,7 @@ describe('Appointment Service', () => {
             const result = await getSlotByIdService('slot-123')
 
             expect(axios.get).toHaveBeenCalledWith(
-                '/patient/patientApplication/slots/slot-123',
+                '/patient/patientApplication/appointments/get-slot-by-id/slot-123',
                 {
                     headers: {
                         Authorization: 'Bearer mock-token',
@@ -101,7 +101,7 @@ describe('Appointment Service', () => {
             const result = await createAppointmentService('slot-123')
 
             expect(axios.post).toHaveBeenCalledWith(
-                '/patient/patientApplication/appointments/create',
+                '/patient/patientApplication/appointments/create-order',
                 { slotId: 'slot-123' },
                 {
                     headers: {
