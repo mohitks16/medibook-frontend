@@ -3,26 +3,69 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { createAppointment } from "../actions";
+import { createAppointment , verifyPayment } from "../actions";
+// import { createOrder, verifyPayment } from "../actions";
 
 export default function CheckoutView({ doctor, slot }) {
     const router = useRouter();
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState("");
 
+
+    const openRazorpayModal = (order) => {
+        const options = {
+            key: order.key,
+            amount: order.amount,
+            currency: order.currency,
+            order_id: order.orderId,
+            name: "MediBook",
+            description: `Consultation with Dr. ${doctor.fullName}`,
+            prefill: order.prefill,
+            theme: { color: "#2563EB" },
+            handler: async (razorpayResponse) => {
+                const verifyRes = await verifyPayment({
+                    appointmentId: order.appointmentId,
+                    razorpay_order_id: razorpayResponse.razorpay_order_id,
+                    razorpay_payment_id: razorpayResponse.razorpay_payment_id,
+                    razorpay_signature: razorpayResponse.razorpay_signature,
+                    slot_id:slot._id
+                });
+                // if payment does not suceed 
+                if (verifyRes.error) {
+                    setError(verifyRes.error);
+                    setLoading(false);
+                    return;
+                }
+                // If payment succeeds 
+                router.push(`/AppointmentSuccess/${order.appointmentId}`);
+            },
+            modal: {
+                ondismiss: () => {
+                    setError("Payment cancelled. You can retry from this page.");
+                    setLoading(false);
+                },
+            },
+        };
+
+        const razorpay = new window.Razorpay(options);
+        razorpay.open();
+    };
+
     const handleConfirm = async () => {
+
         setLoading(true);
         setError("");
-        const res = await createAppointment(slot._id);
-        if (res.error) {
 
+        const res = await createAppointment(slot._id);
+
+        if (res.error) {
             setError(res.error);
             setLoading(false);
             return;
-
         }
-        
-        router.push(`/AppointmentSuccess/${res.appointment._id}`);
+
+        // Loading stays true while modal is open — turn it false on cancel
+        openRazorpayModal(res.appointment);
     };
 
     return (

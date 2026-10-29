@@ -9,7 +9,6 @@ export default async function Page({ params }) {
         <div className="w-16 h-16 bg-teal-50 text-teal-600 rounded-full flex items-center justify-center mx-auto text-2xl font-bold border border-teal-100">
           ✓
         </div>
-        
         <div className="space-y-2">
           <h1 className="text-2xl font-bold text-slate-900">Booking Confirmed</h1>
           <p className="text-sm text-slate-500">

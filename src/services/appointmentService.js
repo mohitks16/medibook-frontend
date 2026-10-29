@@ -21,17 +21,13 @@ export async function getSlotByIdService(slotId) {
                 message: "No token found",
             }
         }
-        // console.log("slotIdataservice" , slotId)
-        // console.log("tokenataservice" , token)
-
-
         const res = await axios.get(`/patient/patientApplication/appointments/get-slot-by-id/${slotId}`, {
             headers: {
                 Authorization: `Bearer ${token}`,
             },
         })
 
-        console.log("resataservice" , res.data)
+        // console.log("resataservice" , res.data)
 
         return {
             success: true,
@@ -60,7 +56,7 @@ export async function createAppointmentService(slotId) {
         }
 
         const res = await axios.post(
-            "/patient/patientApplication/appointments/create",
+            "/patient/patientApplication/appointments/create-order",
             { slotId },
             {
                 headers: {
@@ -78,6 +74,32 @@ export async function createAppointmentService(slotId) {
             status: error.response?.status,
             message:
                 error.response?.data?.message || "Failed to create appointment",
+        }
+    }
+}
+
+export async function verifyPaymentService(payload) {
+    try {
+        const token = await getPatientToken()
+
+        if (!token) {
+            return { success: false, status: 401, message: "No token found" }
+        }
+
+        const res = await axios.post(
+            "/patient/patientApplication/appointments/verify-payment",
+            payload,
+            {
+                headers: { Authorization: `Bearer ${token}` },
+            }
+        )
+
+        return { success: true, appointment: res.data.appointment }
+    } catch (error) {
+        return {
+            success: false,
+            status: error.response?.status,
+            message: error.response?.data?.message || "Failed to verify payment",
         }
     }
 }

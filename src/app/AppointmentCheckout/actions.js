@@ -1,6 +1,6 @@
 "use server"
 
-import { getSlotByIdService, createAppointmentService } from "@/services/appointmentService"
+import { getSlotByIdService, createAppointmentService , verifyPaymentService} from "@/services/appointmentService"
 
 export async function getSlotById(slotId) {
     try {
@@ -27,9 +27,22 @@ export async function createAppointment(slotId) {
         const res = await createAppointmentService(slotId)
         if (!res.success) {
             return { error: res.message, status: res.status }
-        }
+        }   
+        
         return { success: true, appointment: res.appointment }
     } catch (error) {
         return { error: "Failed to create appointment" }
+    }
+}
+
+export async function verifyPayment(payload) {
+    try {
+        const res = await verifyPaymentService(payload)
+        if (!res.success) {
+            return { error: res.message, status: res.status }
+        }
+        return { success: true, appointment: res.appointment }
+    } catch (error) {
+        return { error: "Failed to verify payment" }
     }
 }
