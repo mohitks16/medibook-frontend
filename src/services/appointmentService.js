@@ -103,3 +103,54 @@ export async function verifyPaymentService(payload) {
         }
     }
 }
+
+export async function getPatientAllAppointmentsService() {
+    try {
+        const token = await getPatientToken()
+        if (!token) return { success: false, status: 401, message: "No token found" }
+        const res = await axios.get("/appointments/patient/all", {
+            headers: { Authorization: `Bearer ${token}` },
+        })
+        return { success: true, appointments: res.data.appointments || [] }
+    } catch (error) {
+        return {
+            success: false,
+            status: error.response?.status,
+            message: error.response?.data?.message || "Failed to fetch appointments",
+        }
+    }
+}
+
+export async function getPatientUpcomingAppointmentsService() {
+    try {
+        const token = await getPatientToken()
+        if (!token) return { success: false, status: 401, message: "No token found" }
+        const res = await axios.get("/appointments/patient/upcoming", {
+            headers: { Authorization: `Bearer ${token}` },
+        })
+        return { success: true, appointments: res.data.appointments || [] }
+    } catch (error) {
+        return {
+            success: false,
+            status: error.response?.status,
+            message: error.response?.data?.message || "Failed to fetch appointments",
+        }
+    }
+}
+
+export async function getPatientPastAppointmentsService() {
+    try {
+        const token = await getPatientToken()
+        if (!token) return { success: false, status: 401, message: "No token found" }
+        const res = await axios.get("/appointments/patient/past", {
+            headers: { Authorization: `Bearer ${token}` },
+        })
+        return { success: true, appointments: res.data.appointments || [] }
+    } catch (error) {
+        return {
+            success: false,
+            status: error.response?.status,
+            message: error.response?.data?.message || "Failed to fetch appointments",
+        }
+    }
+}
