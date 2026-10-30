@@ -5,6 +5,11 @@ import {
     uploadProfilePictureService,
 } from "@/services/patientProfileService"
 import { fetchDoctors } from "@/services/doctorDiscoveryService"
+import {
+    getPatientAllAppointmentsService,
+    getPatientUpcomingAppointmentsService,
+    getPatientPastAppointmentsService,
+} from "@/services/appointmentService"
 import { revalidatePath } from "next/cache"
 
 
@@ -53,7 +58,7 @@ export async function updateProfile(formData) {
             success: false,
             message: "An unexpected error occurred",
         }
-        
+
     }
 }
 
@@ -81,4 +86,22 @@ export async function uploadProfilePicture(formData) {
             message: "An unexpected error occurred",
         }
     }
+}
+
+export async function getPatientAllAppointments() {
+    const res = await getPatientAllAppointmentsService()
+    if (!res.success) return { error: res.message, status: res.status }
+    return { success: true, appointments: res.appointments }
+}
+
+export async function getPatientUpcomingAppointments() {
+    const res = await getPatientUpcomingAppointmentsService()
+    if (!res.success) return { error: res.message, status: res.status }
+    return { success: true, appointments: res.appointments }
+}
+
+export async function getPatientPastAppointments() {
+    const res = await getPatientPastAppointmentsService()
+    if (!res.success) return { error: res.message, status: res.status }
+    return { success: true, appointments: res.appointments }
 }

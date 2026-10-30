@@ -1,17 +1,46 @@
 'use client'
 
-import { useState } from 'react'
-import { createSlot, removeSlot } from '../actions'
+import { useState, useEffect } from 'react'
+import { createSlot, removeSlot, getAllAppointments, getPendingAppointments, getDoneAppointments } from '../actions'
 
 export default function AppointmentsSection({ slots }) {
 
-    console.log(slots) ; 
+    console.log(slots) ;
+
     
     const [apptTab, setApptTab] = useState("list")
     const [apptFilter, setApptFilter] = useState("all")
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState("")
     const [success, setSuccess] = useState("")
+
+    const [appointments, setAppointments] = useState([])
+    const [listLoading, setListLoading] = useState(false)
+    const [listError, setListError] = useState("")
+
+    useEffect(() => {
+        if (apptTab !== "list") return   // only fetching the data when appointments tab is open 
+        async function fetchAppointments() {
+            setListLoading(true)
+            setListError("")
+            let res
+            if (apptFilter === "all") {
+                res = await getAllAppointments()
+            } else if (apptFilter === "pending") {
+                res = await getPendingAppointments()
+            } else if (apptFilter === "done") {
+                res = await getDoneAppointments()
+            }
+            setListLoading(false)
+            if (res?.error) {
+                setListError(res.error)
+                setAppointments([])
+            } else if (res?.appointments) {
+                setAppointments(res.appointments)
+            }
+        }
+        fetchAppointments()
+    }, [apptFilter, apptTab])
 
     const timeSlots = [
         "09:00 AM", "09:30 AM", "10:00 AM", "10:30 AM", "11:00 AM", "11:30 AM",
@@ -92,28 +121,53 @@ export default function AppointmentsSection({ slots }) {
                     </div>
 
                     <div className="space-y-3">
-                        <div className="bg-white border border-slate-200 rounded-xl p-4 flex items-start gap-4">
-                            <div className="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center text-slate-600 font-semibold text-sm shrink-0">
-                                JD
-                            </div>
-                            <div className="flex-1 min-w-0">
-                                <div className="flex items-start justify-between gap-2">
-                                    <div>
-                                        <p className="font-medium text-slate-900 text-sm">John Doe</p>
-                                        <p className="text-xs text-slate-500">35 yrs · Chest pain consultation</p>
+                        {listLoading ? (
+                            <p className="text-slate-500 text-sm py-4">Loading...</p>
+                        ) : listError ? (
+                            <div className="bg-red-50 text-red-600 text-sm px-4 py-3 rounded-xl">{listError}</div>
+                        ) : appointments.length === 0 ? (
+                            <p className="text-slate-500 text-sm py-4">No appointments found</p>
+                        ) : (
+                            appointments.map((appointment) => {
+                                const patientName = appointment.patient?.fullName || "Patient"
+                                const initials = patientName.split(" ").map(n => n[0]).join("").toUpperCase().slice(0, 2) // split converts 
+                                const statusRaw = appointment.status || "confirmed"
+                                const statusColor = 
+                                    statusRaw === "completed" ? "bg-slate-100 text-slate-600 border-slate-200" :
+                                    statusRaw === "cancelled" ? "bg-red-50 text-red-600 border-red-100" :
+                                    "bg-blue-50 text-blue-700 border-blue-100"
+
+                                return (
+                                    <div key={appointment._id} className="bg-white border border-slate-200 rounded-xl p-4 flex items-start gap-4">
+                                        <div className="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center text-slate-600 font-semibold text-sm shrink-0">
+                                            {initials}
+                                        </div>
+                                        <div className="flex-1 min-w-0">
+                                            <div className="flex items-start justify-between gap-2">
+                                                <div>
+                                                    <p className="font-medium text-slate-900 text-sm">{patientName}</p>
+                                                    <p className="text-xs text-slate-500">{appointment.reason || "Consultation"}</p>
+                                                </div>
+                                                <span className={`shrink-0 text-xs font-medium px-2.5 py-1 rounded-full border ${statusColor}`}>
+                                                    {statusRaw}
+                                                </span>
+                                            </div>
+                                            <div className="mt-2 flex items-center justify-between">
+                                                <p className="text-xs text-blue-600 font-medium">🕒 {appointment.date || ""} {appointment.time || ""}</p>
+                                                {apptFilter === "pending"  && (
+                                                    <button
+                                                        onClick={() => alert("Coming in a future update")}
+                                                        className="text-xs text-slate-500 hover:text-blue-600 border border-slate-200 px-2.5 py-1 rounded-lg hover:border-blue-200 transition-colors"
+                                                    >
+                                                        Mark as Done
+                                                    </button>
+                                                )}
+                                            </div>
+                                        </div>
                                     </div>
-                                    <span className="shrink-0 text-xs font-medium px-2.5 py-1 rounded-full bg-amber-50 text-amber-700 border border-amber-100">
-                                        Pending
-                                    </span>
-                                </div>
-                                <div className="mt-2 flex items-center justify-between">
-                                    <p className="text-xs text-blue-600 font-medium">🕐 Today, 10:00 AM</p>
-                                    <button className="text-xs text-slate-500 hover:text-blue-600 border border-slate-200 px-2.5 py-1 rounded-lg hover:border-blue-200 transition-colors">
-                                        Mark as Done
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
+                                )
+                            })
+                        )}
                     </div>
                 </>
             )}

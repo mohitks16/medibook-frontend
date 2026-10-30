@@ -1,6 +1,13 @@
 "use server"
 
-import { addSlot, deleteSlot, updateDoctorProfileService } from "@/services/doctorService"
+import { 
+    addSlot, 
+    deleteSlot, 
+    updateDoctorProfileService, 
+    getDoctorAllAppointmentsService, 
+    getDoctorPendingAppointmentsService, 
+    getDoctorDoneAppointmentsService 
+} from "@/services/doctorService"
 import { revalidatePath } from "next/cache"
 
 export async function createSlot(formData) {
@@ -36,7 +43,7 @@ export async function updateProfile(formData) {
 }
 
 export async function removeSlot(slotId) {
-    
+
     if (!slotId) {
         return { error: "Slot ID is required" }
     }
@@ -50,5 +57,23 @@ export async function removeSlot(slotId) {
     revalidatePath("/DoctorDashboard")
     return { success: true }
 
+}
+
+export async function getAllAppointments() {
+    const res = await getDoctorAllAppointmentsService()
+    if (!res.success) return { error: res.message, status: res.status }
+    return { success: true, appointments: res.appointments }
+}
+
+export async function getPendingAppointments() {
+    const res = await getDoctorPendingAppointmentsService()
+    if (!res.success) return { error: res.message, status: res.status }
+    return { success: true, appointments: res.appointments }
+}
+
+export async function getDoneAppointments() {
+    const res = await getDoctorDoneAppointmentsService()
+    if (!res.success) return { error: res.message, status: res.status }
+    return { success: true, appointments: res.appointments }
 }
 

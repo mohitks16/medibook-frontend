@@ -145,9 +145,60 @@ export async function deleteSlot(slotId) {
         return { success: true }
 
     } catch (error) {
-        return { 
-            error: error.response?.data?.message || "Failed to delete slot" 
+        return {
+            error: error.response?.data?.message || "Failed to delete slot"
         }
     }
 
+}
+
+export async function getDoctorAllAppointmentsService() {
+    try {
+        const token = await getToken()
+        if (!token) return { success: false, status: 401, message: "No token found" }
+        const res = await axios.get("/appointments/doctor/all", {
+            headers: { Authorization: `Bearer ${token}` },
+        })
+        return { success: true, appointments: res.data.appointments || [] }
+    } catch (error) {
+        return {
+            success: false,
+            status: error.response?.status,
+            message: error.response?.data?.message || "Failed to fetch appointments",
+        }
+    }
+}
+
+export async function getDoctorPendingAppointmentsService() {
+    try {
+        const token = await getToken()
+        if (!token) return { success: false, status: 401, message: "No token found" }
+        const res = await axios.get("/appointments/doctor/pending", {
+            headers: { Authorization: `Bearer ${token}` },
+        })
+        return { success: true, appointments: res.data.appointments || [] }
+    } catch (error) {
+        return {
+            success: false,
+            status: error.response?.status,
+            message: error.response?.data?.message || "Failed to fetch appointments",
+        }
+    }
+}
+
+export async function getDoctorDoneAppointmentsService() {
+    try {
+        const token = await getToken()
+        if (!token) return { success: false, status: 401, message: "No token found" }
+        const res = await axios.get("/appointments/doctor/done", {
+            headers: { Authorization: `Bearer ${token}` },
+        })
+        return { success: true, appointments: res.data.appointments || [] }
+    } catch (error) {
+        return {
+            success: false,
+            status: error.response?.status,
+            message: error.response?.data?.message || "Failed to fetch appointments",
+        }
+    }
 }
